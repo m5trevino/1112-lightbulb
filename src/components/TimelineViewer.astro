@@ -1,0 +1,651 @@
+---
+import timelineData from '../data/vggish_timeline_0237_0244.json';
+import eventMarkers from '../data/timeline_event_markers.json';
+
+// Calculate stats
+const maxActivation = Math.max(...timelineData.map(d => d.activation));
+const avgActivation = timelineData.reduce((a, b) => a + b.activation, 0) / timelineData.length;
+const peakDataPoint = timelineData.reduce((max, d) => d.activation > max.activation ? d : max, timelineData[0]);
+---
+
+<div class="timeline-section">
+  <div class="timeline-header">
+    <h2 class="glitch" data-text="THE 2:42 AM SEQUENCE">THE 2:42 AM SEQUENCE</h2>
+    <p class="timeline-subtitle">
+      Continuous 7-Minute Forensic Analysis (02:37:00 - 02:44:00)<br>
+      <span class="stat">Peak: {peakDataPoint.timestamp} ({maxActivation.toFixed(3)})</span>
+      <span class="stat">Avg: {avgActivation.toFixed(3)}</span>
+      <span class="stat">{timelineData.length} Data Points</span>
+    </p>
+  </div>
+
+  <!-- Main Chart Container -->
+  <div class="chart-wrapper">
+    <div class="y-axis-label">VGGish Activation</div>
+    <div class="chart-container" id="timeline-chart"></div>
+    <div class="x-axis">
+      <span>02:37:00</span>
+      <span>02:38:00</span>
+      <span>02:39:00</span>
+      <span>02:40:00</span>
+      <span>02:41:00</span>
+      <span>02:42:00</span>
+      <span>02:43:00</span>
+      <span>02:44:00</span>
+    </div>
+  </div>
+
+  <!-- Audio Player -->
+  <div class="timeline-player">
+    <button id="play-pause-btn" class="play-btn">▶ PLAY SEQUENCE</button>
+    <div class="time-display">
+      <span id="current-time">02:37:00.000</span> / <span id="total-time">02:44:00.000</span>
+    </div>
+    <input type="range" id="seek-slider" min="0" max="420" value="0" step="0.1" class="seek-slider">
+  </div>
+
+  <!-- Tooltip (positioned by JS) -->
+  <div class="timeline-tooltip" id="tooltip" style="display: none;">
+    <div class="tooltip-header">
+      <span class="tooltip-time" id="tooltip-time">02:42:30.000</span>
+      <span class="tooltip-activation" id="tooltip-activation">0.76</span>
+    </div>
+    <div class="tooltip-content" id="tooltip-content">
+      <div class="tooltip-event" id="tooltip-event" style="display: none;">
+        <div class="tooltip-images" id="tooltip-images"></div>
+        <div class="tooltip-verdict" id="tooltip-verdict"></div>
+      </div>
+      <div class="tooltip-no-event" id="tooltip-no-event">
+        Background noise - no forensic significance
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Legend -->
+  <div class="event-legend">
+    {eventMarkers.map(marker => (
+      <div class="legend-item" data-event-id={marker.id}>
+        <span class="legend-color" style={`background: ${marker.color}`}></span>
+        <span class="legend-time">{marker.timestamp}</span>
+        <span class="legend-name">{marker.name}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script define:vars={{ timelineData, eventMarkers, maxActivation }}>
+  // Timeline configuration
+  const CHART_HEIGHT = 400;
+  const CHART_PADDING = { top: 20, right: 40, bottom: 40, left: 60 };
+  const TOTAL_SECONDS = 420; // 7 minutes
+  
+  // DOM elements
+  const chartContainer = document.getElementById('timeline-chart');
+  const tooltip = document.getElementById('tooltip');
+  const playBtn = document.getElementById('play-pause-btn');
+  const seekSlider = document.getElementById('seek-slider');
+  const currentTimeEl = document.getElementById('current-time');
+  
+  // Audio setup
+  const audio = new Audio('/timeline/master_timeline_0237_0244.wav');
+  let isPlaying = false;
+  let animationFrameId = null;
+  
+  // Create SVG chart
+  function createChart() {
+    const width = chartContainer.clientWidth;
+    const height = CHART_HEIGHT;
+    const plotWidth = width - CHART_PADDING.left - CHART_PADDING.right;
+    const plotHeight = height - CHART_PADDING.top - CHART_PADDING.bottom;
+    
+    // Create SVG
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.style.display = 'block';
+    
+    // Create defs for gradients
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    gradient.setAttribute('id', 'area-gradient');
+    gradient.setAttribute('x1', '0%');
+    gradient.setAttribute('y1', '0%');
+    gradient.setAttribute('x2', '0%');
+    gradient.setAttribute('y2', '100%');
+    
+    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop1.setAttribute('offset', '0%');
+    stop1.setAttribute('stop-color', '#00f0ff');
+    stop1.setAttribute('stop-opacity', '0.3');
+    
+    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop2.setAttribute('offset', '100%');
+    stop2.setAttribute('stop-color', '#00f0ff');
+    stop2.setAttribute('stop-opacity', '0');
+    
+    gradient.appendChild(stop1);
+    gradient.appendChild(stop2);
+    defs.appendChild(gradient);
+    svg.appendChild(defs);
+    
+    // Create plot group
+    const plotGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    plotGroup.setAttribute('transform', `translate(${CHART_PADDING.left}, ${CHART_PADDING.top})`);
+    
+    // Grid lines
+    for (let i = 0; i <= 7; i++) {
+      const x = (i / 7) * plotWidth;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x);
+      line.setAttribute('y1', 0);
+      line.setAttribute('x2', x);
+      line.setAttribute('y2', plotHeight);
+      line.setAttribute('stroke', '#1a1a1a');
+      line.setAttribute('stroke-width', '1');
+      line.setAttribute('stroke-dasharray', '4');
+      plotGroup.appendChild(line);
+    }
+    
+    // Horizontal grid lines
+    for (let i = 0; i <= 5; i++) {
+      const y = plotHeight - (i / 5) * plotHeight;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', 0);
+      line.setAttribute('y1', y);
+      line.setAttribute('x2', plotWidth);
+      line.setAttribute('y2', y);
+      line.setAttribute('stroke', '#1a1a1a');
+      line.setAttribute('stroke-width', '0.5');
+      plotGroup.appendChild(line);
+    }
+    
+    // Generate path data
+    const points = timelineData.map(d => {
+      const x = (d.seconds_from_start / TOTAL_SECONDS) * plotWidth;
+      const y = plotHeight - (d.activation / maxActivation) * plotHeight;
+      return `${x},${y}`;
+    }).join(' ');
+    
+    // Area under curve
+    const areaPath = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    areaPath.setAttribute('points', `0,${plotHeight} ${points} ${plotWidth},${plotHeight}`);
+    areaPath.setAttribute('fill', 'url(#area-gradient)');
+    plotGroup.appendChild(areaPath);
+    
+    // Line path
+    const linePath = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    linePath.setAttribute('points', points);
+    linePath.setAttribute('fill', 'none');
+    linePath.setAttribute('stroke', '#00f0ff');
+    linePath.setAttribute('stroke-width', '2');
+    linePath.setAttribute('stroke-linejoin', 'round');
+    plotGroup.appendChild(linePath);
+    
+    // Event markers
+    eventMarkers.forEach(marker => {
+      const x = (marker.relative_seconds / TOTAL_SECONDS) * plotWidth;
+      
+      // Marker line
+      const markerLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      markerLine.setAttribute('x1', x);
+      markerLine.setAttribute('y1', 0);
+      markerLine.setAttribute('x2', x);
+      markerLine.setAttribute('y2', plotHeight);
+      markerLine.setAttribute('stroke', marker.color);
+      markerLine.setAttribute('stroke-width', '2');
+      markerLine.setAttribute('stroke-dasharray', '6,4');
+      markerLine.setAttribute('opacity', '0.8');
+      markerLine.classList.add('event-marker');
+      markerLine.dataset.eventId = marker.id;
+      plotGroup.appendChild(markerLine);
+      
+      // Marker label
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', x + 5);
+      text.setAttribute('y', 15);
+      text.setAttribute('fill', marker.color);
+      text.setAttribute('font-size', '10');
+      text.setAttribute('font-family', 'JetBrains Mono, monospace');
+      text.textContent = marker.name;
+      plotGroup.appendChild(text);
+    });
+    
+    // Playhead line (initially hidden)
+    const playhead = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    playhead.setAttribute('id', 'playhead');
+    playhead.setAttribute('x1', 0);
+    playhead.setAttribute('y1', 0);
+    playhead.setAttribute('x2', 0);
+    playhead.setAttribute('y2', plotHeight);
+    playhead.setAttribute('stroke', '#ff3e3e');
+    playhead.setAttribute('stroke-width', '2');
+    playhead.style.display = 'none';
+    plotGroup.appendChild(playhead);
+    
+    // Interactive overlay
+    const overlay = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    overlay.setAttribute('width', plotWidth);
+    overlay.setAttribute('height', plotHeight);
+    overlay.setAttribute('fill', 'transparent');
+    overlay.style.cursor = 'crosshair';
+    
+    // Mouse events
+    overlay.addEventListener('mousemove', handleMouseMove);
+    overlay.addEventListener('mouseleave', handleMouseLeave);
+    overlay.addEventListener('click', handleChartClick);
+    
+    plotGroup.appendChild(overlay);
+    svg.appendChild(plotGroup);
+    chartContainer.appendChild(svg);
+    
+    return { plotWidth, plotHeight };
+  }
+  
+  // Find nearest data point
+  function findNearestDataPoint(mouseX, plotWidth) {
+    const seconds = (mouseX / plotWidth) * TOTAL_SECONDS;
+    const frameIndex = Math.round(seconds / 0.96);
+    return timelineData[Math.min(Math.max(frameIndex, 0), timelineData.length - 1)];
+  }
+  
+  // Find nearest event
+  function findNearestEvent(seconds) {
+    let nearest = null;
+    let minDistance = Infinity;
+    
+    eventMarkers.forEach(marker => {
+      const distance = Math.abs(marker.relative_seconds - seconds);
+      if (distance < minDistance && distance < 10) { // Within 10 seconds
+        minDistance = distance;
+        nearest = marker;
+      }
+    });
+    
+    return nearest;
+  }
+  
+  // Handle mouse move
+  function handleMouseMove(e) {
+    const rect = chartContainer.querySelector('svg').getBoundingClientRect();
+    const plotWidth = rect.width - CHART_PADDING.left - CHART_PADDING.right;
+    const mouseX = e.clientX - rect.left - CHART_PADDING.left;
+    
+    const data = findNearestDataPoint(mouseX, plotWidth);
+    const nearestEvent = findNearestEvent(data.seconds_from_start);
+    
+    // Update tooltip
+    document.getElementById('tooltip-time').textContent = data.timestamp;
+    document.getElementById('tooltip-activation').textContent = data.activation.toFixed(3);
+    
+    const eventSection = document.getElementById('tooltip-event');
+    const noEventSection = document.getElementById('tooltip-no-event');
+    
+    if (nearestEvent) {
+      eventSection.style.display = 'block';
+      noEventSection.style.display = 'none';
+      document.getElementById('tooltip-verdict').textContent = nearestEvent.description;
+      
+      // Load forensic images
+      const imagesContainer = document.getElementById('tooltip-images');
+      const prefix = nearestEvent.image_prefix;
+      imagesContainer.innerHTML = `
+        <img src="/data/${nearestEvent.folder}/${prefix}_brick.png" alt="Brick" />
+        <img src="/data/${nearestEvent.folder}/${prefix}_mess.png" alt="Mess" />
+        <img src="/data/${nearestEvent.folder}/${prefix}_shred.png" alt="Shred" />
+        <img src="/data/${nearestEvent.folder}/${prefix}_shriek.png" alt="Shriek" />
+      `;
+    } else {
+      eventSection.style.display = 'none';
+      noEventSection.style.display = 'block';
+    }
+    
+    // Position tooltip
+    const tooltipX = e.pageX + 15;
+    const tooltipY = e.pageY - 100;
+    tooltip.style.left = `${tooltipX}px`;
+    tooltip.style.top = `${tooltipY}px`;
+    tooltip.style.display = 'block';
+  }
+  
+  // Handle mouse leave
+  function handleMouseLeave() {
+    tooltip.style.display = 'none';
+  }
+  
+  // Handle chart click (seek)
+  function handleChartClick(e) {
+    const rect = chartContainer.querySelector('svg').getBoundingClientRect();
+    const plotWidth = rect.width - CHART_PADDING.left - CHART_PADDING.right;
+    const mouseX = e.clientX - rect.left - CHART_PADDING.left;
+    const seconds = (mouseX / plotWidth) * TOTAL_SECONDS;
+    
+    audio.currentTime = seconds;
+    updatePlayhead(seconds);
+    updateTimeDisplay(seconds);
+  }
+  
+  // Update playhead position
+  function updatePlayhead(seconds) {
+    const playhead = document.getElementById('playhead');
+    if (!playhead) return;
+    
+    const plotWidth = chartContainer.querySelector('svg').viewBox.baseVal.width - CHART_PADDING.left - CHART_PADDING.right;
+    const x = (seconds / TOTAL_SECONDS) * plotWidth;
+    
+    playhead.setAttribute('x1', x);
+    playhead.setAttribute('x2', x);
+    playhead.style.display = 'block';
+  }
+  
+  // Update time display
+  function updateTimeDisplay(seconds) {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    const ms = Math.floor((seconds % 1) * 1000);
+    
+    const timeStr = `02:${37 + mins}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
+    currentTimeEl.textContent = timeStr;
+    seekSlider.value = seconds;
+  }
+  
+  // Animation loop
+  function animate() {
+    if (isPlaying) {
+      updatePlayhead(audio.currentTime);
+      updateTimeDisplay(audio.currentTime);
+      animationFrameId = requestAnimationFrame(animate);
+    }
+  }
+  
+  // Play/Pause handler
+  playBtn.addEventListener('click', () => {
+    if (isPlaying) {
+      audio.pause();
+      playBtn.textContent = '▶ PLAY SEQUENCE';
+      isPlaying = false;
+      cancelAnimationFrame(animationFrameId);
+    } else {
+      audio.play();
+      playBtn.textContent = '⏸ PAUSE';
+      isPlaying = true;
+      animate();
+    }
+  });
+  
+  // Audio ended
+  audio.addEventListener('ended', () => {
+    isPlaying = false;
+    playBtn.textContent = '▶ PLAY SEQUENCE';
+    cancelAnimationFrame(animationFrameId);
+  });
+  
+  // Seek slider
+  seekSlider.addEventListener('input', (e) => {
+    const seconds = parseFloat(e.target.value);
+    audio.currentTime = seconds;
+    updatePlayhead(seconds);
+    updateTimeDisplay(seconds);
+  });
+  
+  // Legend click to seek
+  document.querySelectorAll('.legend-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const eventId = item.dataset.eventId;
+      const marker = eventMarkers.find(m => m.id === eventId);
+      if (marker) {
+        audio.currentTime = marker.relative_seconds;
+        updatePlayhead(marker.relative_seconds);
+        updateTimeDisplay(marker.relative_seconds);
+      }
+    });
+  });
+  
+  // Initialize
+  createChart();
+  
+  // Handle resize
+  window.addEventListener('resize', () => {
+    chartContainer.innerHTML = '';
+    createChart();
+  });
+</script>
+
+<style>
+  .timeline-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin: 60px 0;
+    padding: 40px;
+    position: relative;
+  }
+  
+  .timeline-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .timeline-header h2 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    color: #fff;
+  }
+  
+  .timeline-subtitle {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+  }
+  
+  .timeline-subtitle .stat {
+    display: inline-block;
+    margin: 0 15px;
+    padding: 5px 15px;
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 2px;
+    color: var(--accent-cyan);
+  }
+  
+  .chart-wrapper {
+    position: relative;
+    margin: 30px 0;
+  }
+  
+  .y-axis-label {
+    position: absolute;
+    left: -50px;
+    top: 50%;
+    transform: rotate(-90deg) translateX(50%);
+    transform-origin: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+  }
+  
+  .chart-container {
+    height: 400px;
+    background: #000;
+    border: 1px solid #1a1a1a;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .x-axis {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 40px 0 60px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+  
+  .timeline-player {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 30px 0;
+    padding: 20px;
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-radius: 4px;
+  }
+  
+  .play-btn {
+    background: transparent;
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+    padding: 10px 25px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: bold;
+    transition: all 0.2s;
+  }
+  
+  .play-btn:hover {
+    background: var(--accent-red);
+    color: #000;
+  }
+  
+  .time-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent-cyan);
+    min-width: 200px;
+  }
+  
+  .seek-slider {
+    flex: 1;
+    height: 6px;
+    -webkit-appearance: none;
+    background: #1a1a1a;
+    border-radius: 3px;
+    outline: none;
+  }
+  
+  .seek-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--accent-cyan);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .seek-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--accent-cyan);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .timeline-tooltip {
+    position: fixed;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 15px;
+    min-width: 300px;
+    z-index: 1000;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+  }
+  
+  .tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  
+  .tooltip-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    color: #fff;
+  }
+  
+  .tooltip-activation {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent-cyan);
+  }
+  
+  .tooltip-images {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin: 10px 0;
+  }
+  
+  .tooltip-images img {
+    width: 100%;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 2px;
+    border: 1px solid #1a1a1a;
+  }
+  
+  .tooltip-verdict {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    line-height: 1.4;
+  }
+  
+  .tooltip-no-event {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  
+  .event-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #1a1a1a;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .legend-item:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border);
+  }
+  
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+  
+  .legend-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+  
+  .legend-name {
+    font-size: 0.8rem;
+    color: #fff;
+  }
+</style>
