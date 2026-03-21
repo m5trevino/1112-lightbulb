@@ -1,0 +1,77 @@
+---
+// Visitor Counter Widget - Displays live visitor count
+---
+
+<div class="visitor-counter">
+  <div class="counter-content">
+    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 4a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0 014-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z"/>
+    </svg>
+    <span class="label">Site Visitors</span>
+    <a href="https://1112-king-rd.goatcounter.com" target="_blank" rel="noopener noreferrer" class="count-link">
+      View Stats →
+    </a>
+  </div>
+</div>
+
+<style>
+  .visitor-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 16px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+  }
+
+  .counter-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+    color: var(--accent-cyan);
+  }
+
+  .label {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .count-link {
+    color: var(--accent-cyan);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border: 1px solid var(--accent-cyan);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .count-link:hover {
+    background: var(--accent-cyan);
+    color: #000;
+  }
+
+  @media (max-width: 600px) {
+    .visitor-counter {
+      bottom: 10px;
+      right: 10px;
+      padding: 8px 12px;
+    }
+
+    .label {
+      display: none;
+    }
+  }
+</style>
