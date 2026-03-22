@@ -1,0 +1,145 @@
+---
+import Layout from '../layouts/Layout.astro';
+import EvidenceCard from '../components/EvidenceCard.astro';
+import TimelineViewer from '../components/TimelineViewer.astro';
+import findings from '../data/findings.json';
+
+// Filter for-sures to handle grouping
+const forSures = findings.filter(f => f.is_forsure);
+---
+
+<Layout title="EVIDENCE | 1112 KING RD">
+    <div class="container">
+      <header>
+        <h1 class="glitch" data-text="EVIDENCE">THE EVIDENCE</h1>
+        <p class="tagline">VERIFIED ACOUSTIC ANOMALIES & DISTRESS SIGNALS</p>
+      </header>
+
+      <!-- Interactive Timeline: 2:42 AM Sequence -->
+      <TimelineViewer />
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-val">{forSures.length}</span>
+          <span class="stat-label">Confirmed Distress Events</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val">3</span>
+          <span class="stat-label">Validating Models</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val">120+</span>
+          <span class="stat-label">Ruled Out (See Limitations)</span>
+        </div>
+      </div>
+
+      <section id="for-sures">
+        <span class="section-label">High-Confidence Findings</span>
+        <p class="intro-text">
+          The following events have been flagged by multiple models as exhibiting high acoustic roughness, 
+          sudden impulse onsets, and semantic markers consistent with human distress.
+        </p>
+        
+        {forSures.length > 0 ? (
+          forSures.map(finding => (
+            <EvidenceCard finding={finding} />
+          ))
+        ) : (
+          <p style="color: grey;">No confirmed markers found in this sequence.</p>
+        )}
+      </section>
+
+      <section class="glossary">
+        <h2>THE FOUR FORENSIC INDICATORS</h2>
+        <dl>
+          <dt>IMAGE 01: BRICK (Waveform)</dt>
+          <dd><strong>Raw Sound Pressure.</strong> A "Brick" shape proves sustained energy. Terror screams don't just "pop"—they hold. We use this to identify sudden impacts vs sustained vocalization.</dd>
+          
+          <dt>IMAGE 02: MESS (Spectrogram)</dt>
+          <dd><strong>Frequency Over Time.</strong> We look for "Frequency Blur"—distant, muffled screams lose clarity but leave a blur of high-frequency energy that normal background noise doesn't produce.</dd>
+          
+          <dt>IMAGE 03: SHRED (Chaos Score)</dt>
+          <dd><strong>Spectral Flatness.</strong> The "Shred Score." Most sounds are tonal (whistles, words). Screams are noisy and chaotic. High shred = physically rough = biological distress.</dd>
+          
+          <dt>IMAGE 04: SHRIEK (Pitch Track)</dt>
+          <dd><strong>Spectral Centroid.</strong> Tracks the "center" of the sound. When pitch spikes into 1500-2000Hz range, it's a shriek. Human vocal cords under adrenaline produce this signature.</dd>
+        </dl>
+      </section>
+    </div>
+
+    <script>
+      import WaveSurfer from 'wavesurfer.js';
+      
+      document.querySelectorAll('.play-btn').forEach(btn => {
+        const id = btn.dataset.id;
+        const url = btn.dataset.url;
+        
+        const ws = WaveSurfer.create({
+          container: `#waveform-${id}`,
+          waveColor: '#333',
+          progressColor: '#ff3e3e',
+          cursorColor: '#fff',
+          barWidth: 2,
+          height: 60,
+          url: url
+        });
+
+        btn.addEventListener('click', () => {
+          ws.playPause();
+          btn.textContent = ws.isPlaying() ? 'PAUSE' : 'PLAY EVIDENCE';
+        });
+
+        ws.on('finish', () => {
+          btn.textContent = 'PLAY EVIDENCE';
+        });
+      });
+    </script>
+</Layout>
+
+<style is:global>
+  .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+  
+  header { margin-bottom: 80px; border-left: 4px solid var(--accent-red); padding-left: 30px; }
+  header h1 { font-size: 4rem; margin: 0; line-height: 0.9; }
+  .tagline { color: var(--accent-red); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; margin-top: 10px; letter-spacing: 4px; }
+
+  .intro-text {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    margin-bottom: 40px;
+    max-width: 800px;
+    line-height: 1.6;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+    display: block;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+  }
+
+  .stats-bar {
+    display: flex; gap: 40px; margin-bottom: 60px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    padding: 20px 40px; border-radius: 4px;
+    backdrop-filter: blur(10px);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-val { font-size: 1.5rem; font-weight: bold; color: #fff; }
+  .stat-label { font-size: 0.7rem; text-transform: uppercase; color: var(--text-dim); letter-spacing: 2px; }
+
+  .glossary {
+    margin-top: 60px; padding: 40px; background: rgba(0, 240, 255, 0.05);
+    border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .glossary h2 { font-size: 1.2rem; color: var(--accent-cyan); margin-top: 0; }
+  .glossary dl { display: grid; grid-template-columns: 150px 1fr; gap: 20px; }
+  .glossary dt { font-weight: bold; color: #fff; }
+  .glossary dd { margin: 0; color: var(--text-dim); font-size: 0.9rem; }
+</style>
