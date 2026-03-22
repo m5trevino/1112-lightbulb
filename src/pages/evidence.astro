@@ -71,27 +71,39 @@ const forSures = findings.filter(f => f.is_forsure);
       import WaveSurfer from 'wavesurfer.js';
       
       document.querySelectorAll('.play-btn').forEach(btn => {
-        const id = btn.dataset.id;
-        const url = btn.dataset.url;
+        const id = btn.getAttribute('data-id');
+        const url = btn.getAttribute('data-url');
         
-        const ws = WaveSurfer.create({
-          container: `#waveform-${id}`,
-          waveColor: '#333',
-          progressColor: '#ff3e3e',
-          cursorColor: '#fff',
-          barWidth: 2,
-          height: 60,
-          url: url
-        });
+        if (!id || !url) return;
 
-        btn.addEventListener('click', () => {
-          ws.playPause();
-          btn.textContent = ws.isPlaying() ? 'PAUSE' : 'PLAY EVIDENCE';
-        });
+        try {
+          const ws = WaveSurfer.create({
+            container: `#waveform-${id}`,
+            waveColor: '#333',
+            progressColor: '#ff3e3e',
+            cursorColor: '#fff',
+            barWidth: 2,
+            height: 60,
+            url: url
+          });
 
-        ws.on('finish', () => {
-          btn.textContent = 'PLAY EVIDENCE';
-        });
+          btn.addEventListener('click', () => {
+            ws.playPause();
+            btn.textContent = ws.isPlaying() ? 'PAUSE' : 'PLAY EVIDENCE';
+          });
+
+          ws.on('finish', () => {
+            btn.textContent = 'PLAY EVIDENCE';
+          });
+
+          ws.on('error', (e) => {
+            console.error('WaveSurfer Error:', e, url);
+            btn.textContent = 'ERROR LOADING';
+            btn.style.borderColor = 'orange';
+          });
+        } catch (err) {
+          console.error('Init Error:', err);
+        }
       });
     </script>
 </Layout>

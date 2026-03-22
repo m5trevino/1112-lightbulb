@@ -29,9 +29,9 @@ const formattedDate = dateObj.toLocaleDateString('en-US', {
 
   <!-- WaveSurfer Player Section -->
   <div class="player-container">
-    <div id={`waveform-${finding.evidence_id}`} class="waveform"></div>
+    <div id={`waveform-${finding.evidence_id.replace(/\W/g, '-')}`} class="waveform"></div>
     <div class="controls">
-      <button class="play-btn" data-id={`${finding.evidence_id}`} data-url={`/data/${finding.folder}/${finding.audio_file}`}>PLAY EVIDENCE</button>
+      <button class="play-btn" data-id={`${finding.evidence_id.replace(/\W/g, '-')}`} data-url={`/data/${finding.folder}/${finding.audio_file}`}>PLAY EVIDENCE</button>
       <div class="source-info">
         <span class="source-label">LOG SOURCE:</span>
         <span class="source-val">{finding.source_file} @ {finding.offset_seconds}s</span>
