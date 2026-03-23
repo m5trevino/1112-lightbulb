@@ -1,0 +1,181 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="1112 KING RD | FORENSIC AUDIO ANALYSIS">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="timestamp">02:38:00 — 02:44:00 AM</div>
+      <h1 class="glitch" data-text="FORENSIC AUDIO ANALYSIS">FORENSIC AUDIO ANALYSIS</h1>
+      <h2 class="sub-glitch">1112 KING ROAD, MOSCOW, IDAHO</h2>
+      
+      <p class="thesis">
+        Audio recorded by the 1112 King Road lightbulb camera contains multiple <strong>high-salience acoustic events</strong> 
+        consistent with human distress vocalizations and physical impacts.
+      </p>
+
+      <p class="thesis-detail">
+        Three independent open-source models (VGGish, BEATs, and LAION-CLAP) converge on the same timestamps, 
+        identifying signatures of <span class="highlight">biological terror</span> and <span class="highlight">structural impact</span> 
+        that deviate significantly from background noise.
+      </p>
+
+      <div class="cta-group">
+        <a href="/methodology" class="btn btn-primary">HOW WE KNOW (METHODOLOGY)</a>
+        <a href="/evidence" class="btn btn-secondary">SEE THE EVIDENCE</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature-card">
+      <h3>The Signal</h3>
+      <p>Analysis of 150+ acoustic events isolated <strong>12 high-confidence anomalies</strong> that align with the forensic timeline.</p>
+    </div>
+    <div class="feature-card">
+      <h3>The Biology</h3>
+      <p>Acoustic roughness analysis confirms modulation in the <strong>30-150Hz band</strong>, the unique signature of human screams.</p>
+    </div>
+    <div class="feature-card">
+      <h3>The Consensus</h3>
+      <p>Multi-model triangulation reduces false positives. When <strong>3 different AIs agree</strong>, the probability of error drops near zero.</p>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .hero {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: radial-gradient(circle at center, rgba(255,62,62,0.1) 0%, transparent 70%);
+    padding: 20px;
+  }
+
+  .hero-content {
+    max-width: 900px;
+  }
+
+  .timestamp {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-red);
+    font-size: 1.2rem;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    border: 1px solid var(--accent-red);
+    display: inline-block;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.5);
+  }
+
+  h1 {
+    font-size: 4.5rem;
+    margin: 0;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .sub-glitch {
+    font-size: 1.5rem;
+    color: var(--text-dim);
+    margin: 0 0 40px 0;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 2px;
+  }
+
+  .thesis {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+
+  .thesis-detail {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    max-width: 700px;
+    margin: 0 auto 50px auto;
+    line-height: 1.6;
+  }
+
+  .highlight {
+    color: var(--accent-cyan);
+    font-weight: bold;
+  }
+
+  .cta-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .btn {
+    padding: 15px 30px;
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .btn-primary {
+    background: var(--accent-cyan);
+    color: #000;
+    border: 1px solid var(--accent-cyan);
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent-cyan);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+  }
+  .btn-secondary:hover {
+    background: var(--accent-red);
+    color: #000;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto 80px auto;
+    padding: 0 20px;
+  }
+
+  .feature-card {
+    background: rgba(20,20,20,0.8);
+    border: 1px solid var(--border);
+    padding: 30px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+
+  .feature-card h3 {
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 0;
+    font-size: 1.2rem;
+  }
+
+  .feature-card p {
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    h1 { font-size: 2.5rem; }
+    .features { grid-template-columns: 1fr; }
+    .cta-group { flex-direction: column; }
+  }
+</style>

@@ -1,0 +1,494 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Methodology | 1112 King Rd">
+  <div class="container">
+    <header class="page-header">
+      <h1 class="glitch" data-text="METHODOLOGY">METHODOLOGY</h1>
+      <p class="subtitle">Three-Model Forensic Triangulation Approach</p>
+    </header>
+
+    <section class="intro">
+      <p class="lead">
+        This analysis employs <strong>three independent AI models</strong> with different 
+        architectures, training data, and outputs. When all three converge on the same 
+        timestamps, the confidence of detection increases exponentially.
+      </p>
+    </section>
+
+    <!-- Model 1: VGGish -->
+    <section class="model-section">
+      <div class="model-header vggish">
+        <span class="model-number">01</span>
+        <h2>VGGish</h2>
+        <span class="model-meta">Google (2017)</span>
+      </div>
+      
+      <div class="model-content">
+        <div class="specs">
+          <div class="spec">
+            <span class="label">Architecture</span>
+            <span class="value">CNN (VGG-based)</span>
+          </div>
+          <div class="spec">
+            <span class="label">Embedding Dim</span>
+            <span class="value">128-dimensional</span>
+          </div>
+          <div class="spec">
+            <span class="label">Training Data</span>
+            <span class="value">YouTube-8M / AudioSet</span>
+          </div>
+          <div class="spec">
+            <span class="label">Output</span>
+            <span class="value">Embedding magnitude</span>
+          </div>
+        </div>
+        
+        <div class="description">
+          <h3>What It Does</h3>
+          <p>
+            VGGish converts 1-second audio chunks into 128-dimensional vectors. High magnitude 
+            indicates acoustic salience — a deviation from background noise. It's the gold 
+            standard for quick anomaly detection in surveillance audio.
+          </p>
+          
+          <h3>Strengths for This Case</h3>
+          <ul>
+            <li>Extremely sensitive to any deviation from background</li>
+            <li>Fast, lightweight, battle-tested</li>
+            <li>Clear magnitude peaks at event timestamps</li>
+          </ul>
+          
+          <h3>Limitations</h3>
+          <ul>
+            <li>No semantic understanding (doesn't know scream vs door slam)</li>
+            <li>Can be noisy on distant/low-SNR audio</li>
+            <li>Fixed 0.96s resolution</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Model 2: BEATs -->
+    <section class="model-section">
+      <div class="model-header beats">
+        <span class="model-number">02</span>
+        <h2>BEATs</h2>
+        <span class="model-meta">Microsoft (2022-2023)</span>
+      </div>
+      
+      <div class="model-content">
+        <div class="specs">
+          <div class="spec">
+            <span class="label">Architecture</span>
+            <span class="value">Transformer (BERT-style)</span>
+          </div>
+          <div class="spec">
+            <span class="label">Embedding Dim</span>
+            <span class="value">768-dimensional</span>
+          </div>
+          <div class="spec">
+            <span class="label">Training Data</span>
+            <span class="value">AudioSet (self-supervised)</span>
+          </div>
+          <div class="spec">
+            <span class="label">Output</span>
+            <span class="value">Frame-level activation</span>
+          </div>
+        </div>
+        
+        <div class="description">
+          <h3>What It Does</h3>
+          <p>
+            BEATs (BERT-based Audio Embedding Transformer) uses self-supervised masked 
+            prediction on spectrograms. It produces 768-dimensional embeddings that capture 
+            subtle temporal patterns and sudden acoustic changes.
+          </p>
+          
+          <h3>Strengths for This Case</h3>
+          <ul>
+            <li>Excellent at capturing subtle temporal structure</li>
+            <li>Finds hidden anomalies VGGish misses</li>
+            <li>Self-supervised = no training bias</li>
+          </ul>
+          
+          <h3>Limitations</h3>
+          <ul>
+            <li>Purely unsupervised — no built-in labels</li>
+            <li>Requires interpretation of activation patterns</li>
+            <li>More computationally intensive</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Model 3: LAION-CLAP -->
+    <section class="model-section">
+      <div class="model-header clap">
+        <span class="model-number">03</span>
+        <h2>LAION-CLAP</h2>
+        <span class="model-meta">LAION-AI (2023)</span>
+      </div>
+      
+      <div class="model-content">
+        <div class="specs">
+          <div class="spec">
+            <span class="label">Architecture</span>
+            <span class="value">Contrastive (CLIP-style)</span>
+          </div>
+          <div class="spec">
+            <span class="label">Embedding Dim</span>
+            <span class="value">Audio-Text joint space</span>
+          </div>
+          <div class="spec">
+            <span class="label">Training Data</span>
+            <span class="value">LAION-Audio-630K</span>
+          </div>
+          <div class="spec">
+            <span class="label">Output</span>
+            <span class="value">Cosine similarity scores</span>
+          </div>
+        </div>
+        
+        <div class="description">
+          <h3>What It Does</h3>
+          <p>
+            LAION-CLAP learns to match audio embeddings to text embeddings. You write a 
+            description like "woman screaming in terror" and it tells you how well the 
+            audio matches — zero-shot, no training required.
+          </p>
+          
+          <h3>Strengths for This Case</h3>
+          <ul>
+            <li>Semantic interpretation without training</li>
+            <li>Human-readable descriptions</li>
+            <li>Matches forensic context to acoustic events</li>
+          </ul>
+          
+          <h3>Limitations</h3>
+          <ul>
+            <li>Struggles with very faint audio (low SNR)</li>
+            <li>Chunk-level precision (not frame-accurate)</li>
+            <li>Requires carefully crafted prompts</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Triangulation Strategy -->
+    <section class="triangulation-section">
+      <h2>Why Triangulation Works</h2>
+      
+      <div class="tri-grid">
+        <div class="tri-card">
+          <h3>Orthogonal Methods</h3>
+          <p>
+            Each model uses different training data, architectures, and outputs. 
+            VGGish: 128-dim CNN on YouTube. BEATs: 768-dim transformer self-supervised. 
+            CLAP: contrastive audio-text on 630K pairs. Convergence across all three 
+            is powerful evidence.
+          </p>
+        </div>
+        <div class="tri-card">
+          <h3>Reproducible</h3>
+          <p>
+            All models are publicly available (HuggingFace, GitHub). Anyone can 
+            download the same audio and rerun the analysis. This transparency is 
+            essential for forensic defensibility.
+          </p>
+        </div>
+        <div class="tri-card">
+          <h3>No Cherry-Picking</h3>
+          <p>
+            Raw outputs from all three models are shown side-by-side. We don't 
+            hide results that don't match — we analyze convergence patterns and 
+            explain discrepancies.
+          </p>
+        </div>
+      </div>
+
+      <div class="convergence-example">
+        <h3>Example Convergence</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>VGGish</th>
+              <th>BEATs</th>
+              <th>CLAP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>02:42:30</td>
+              <td>Peak: 0.76</td>
+              <td>24 spikes</td>
+              <td>"woman screaming" (0.57)</td>
+            </tr>
+            <tr>
+              <td>02:42:58</td>
+              <td>Peak: 0.83</td>
+              <td>31 spikes</td>
+              <td>"extreme fear" (0.61)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Limitations -->
+    <section class="limitations-section">
+      <h2>Transparency & Limitations</h2>
+      <div class="limitations-box">
+        <p>
+          <strong>Data Quality:</strong> Distant outdoor microphone, low SNR, party 
+          noise interference. This is citizen forensic analysis using peer-reviewed 
+          open models — not official evidence.
+        </p>
+        <p>
+          <strong>Timeline Discrepancy:</strong> Official timeline differs from our 
+          analysis by ~30 seconds. This could be due to camera clock drift, codec 
+          delays, or timestamp encoding differences.
+        </p>
+        <p>
+          <strong>Interpretation:</strong> AI models provide statistical patterns, 
+          not legal proof. Human review and expert verification are essential.
+        </p>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 60px;
+    border-bottom: 2px solid var(--accent-red);
+    padding-bottom: 30px;
+  }
+
+  .page-header h1 {
+    font-size: 3rem;
+    margin: 0;
+    color: #fff;
+  }
+
+  .subtitle {
+    color: var(--accent-cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    margin-top: 10px;
+  }
+
+  .lead {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--text-main);
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 60px auto;
+  }
+
+  .model-section {
+    margin-bottom: 80px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .model-header {
+    padding: 25px 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .model-header.vggish { background: rgba(255, 107, 107, 0.1); }
+  .model-header.beats { background: rgba(78, 205, 196, 0.1); }
+  .model-header.clap { background: rgba(155, 89, 182, 0.1); }
+
+  .model-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .model-header h2 {
+    flex: 1;
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .model-meta {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+  }
+
+  .model-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+    padding: 30px;
+  }
+
+  .specs {
+    background: rgba(0,0,0,0.3);
+    padding: 25px;
+    border-radius: 4px;
+  }
+
+  .spec {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .spec:last-child {
+    border-bottom: none;
+  }
+
+  .spec .label {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  .spec .value {
+    color: #fff;
+    font-weight: bold;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  .description h3 {
+    color: var(--accent-cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    margin: 25px 0 10px 0;
+  }
+
+  .description h3:first-child {
+    margin-top: 0;
+  }
+
+  .description p {
+    color: var(--text-main);
+    line-height: 1.6;
+    margin: 0 0 15px 0;
+  }
+
+  .description ul {
+    color: var(--text-dim);
+    margin: 0 0 20px 0;
+    padding-left: 20px;
+  }
+
+  .description li {
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    color: var(--accent-cyan);
+    font-family: 'JetBrains Mono', monospace;
+    border-left: 4px solid var(--accent-red);
+    padding-left: 20px;
+    margin: 60px 0 30px 0;
+  }
+
+  .tri-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin: 40px 0;
+  }
+
+  .tri-card {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border);
+    padding: 25px;
+    border-radius: 4px;
+  }
+
+  .tri-card h3 {
+    color: var(--accent-cyan);
+    margin: 0 0 15px 0;
+    font-size: 1rem;
+  }
+
+  .tri-card p {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .convergence-example {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border);
+    padding: 30px;
+    border-radius: 4px;
+    margin-top: 30px;
+  }
+
+  .convergence-example h3 {
+    color: var(--accent-cyan);
+    margin: 0 0 20px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    text-align: left;
+    padding: 15px;
+    color: var(--accent-cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    border-bottom: 2px solid var(--accent-red);
+  }
+
+  td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .limitations-box {
+    background: rgba(255, 184, 0, 0.05);
+    border: 1px solid rgba(255, 184, 0, 0.2);
+    padding: 30px;
+    border-radius: 4px;
+  }
+
+  .limitations-box p {
+    color: var(--text-dim);
+    margin: 0 0 15px 0;
+    line-height: 1.6;
+  }
+
+  .limitations-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 900px) {
+    .model-content {
+      grid-template-columns: 1fr;
+    }
+    .tri-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

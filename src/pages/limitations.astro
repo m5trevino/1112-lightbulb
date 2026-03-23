@@ -1,0 +1,174 @@
+---
+import Layout from '../layouts/Layout.astro';
+import EvidenceCard from '../components/EvidenceCard.astro';
+import findings from '../data/findings.json';
+
+const others = findings.filter(f => !f.is_forsure);
+---
+
+<Layout title="LIMITATIONS & TRANSPARENCY | 1112 KING RD">
+  <div class="container">
+    <header>
+      <h1 class="glitch" data-text="LIMITATIONS">LIMITATIONS & TRANSPARENCY</h1>
+      <p class="tagline">FULL DISCLOSURE OF DATA & METHODOLOGY</p>
+    </header>
+
+    <section class="intro">
+      <p class="lead">
+        To maintain the highest standard of integrity, we disclose all analyzed events, including those 
+        that were ruled out. We also explicitly state the limitations of this analysis given the source material.
+      </p>
+    </section>
+
+    <section class="limitations-list">
+      <h2>KNOWN LIMITATIONS</h2>
+      <div class="limitation-card">
+        <h3>01 // Signal-to-Noise Ratio (SNR)</h3>
+        <p>
+          The source audio is from an outdoor security camera (1112 King Rd) located approximately 50 feet 
+          from the target residence. Wind noise, road traffic, and compression artifacts significantly 
+          degrade the signal. While high-energy events (screams) cut through, subtle details may be lost.
+        </p>
+      </div>
+
+      <div class="limitation-card">
+        <h3>02 // Citizen Science Scope</h3>
+        <p>
+          This analysis utilizes peer-reviewed open-source models (VGGish, BEATs, CLAP) but has not been 
+          validated by a state forensic laboratory. It is a data-driven investigation intended to transparently 
+          present acoustic anomalies, not legal proof.
+        </p>
+      </div>
+
+      <div class="limitation-card">
+        <h3>03 // Timeline Discrepancy</h3>
+        <p>
+          Our timestamps derive directly from the MP4 file metadata. There is a known ~30 second offset 
+          compared to some official police timelines. This may be due to clock drift or differences in 
+          reference points (e.g., "start of file" vs "wall clock time").
+        </p>
+      </div>
+    </section>
+
+    <section class="ruled-out">
+      <div class="ruled-out-header">
+        <h2>THE "NULL" RESULTS ({others.length} Events)</h2>
+        <p>
+          We analyzed {findings.length} total acoustic events. The following {others.length} were determined 
+          <strong>NOT</strong> to meet the strict threshold for distress. We publish them here to show we did 
+          not "cherry-pick" data.
+        </p>
+      </div>
+
+      <div class="findings-grid">
+        {others.map(finding => (
+          <EvidenceCard finding={finding} />
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <script>
+    import WaveSurfer from 'wavesurfer.js';
+    
+    document.querySelectorAll('.play-btn').forEach(btn => {
+      const id = btn.getAttribute('data-id');
+      const url = btn.getAttribute('data-url');
+      
+      if (!id || !url) return;
+
+      try {
+        const ws = WaveSurfer.create({
+          container: `#waveform-${id}`,
+          waveColor: '#333',
+          progressColor: '#ffb800', // Yellow for background events
+          cursorColor: '#fff',
+          barWidth: 2,
+          height: 60,
+          url: url
+        });
+
+        btn.addEventListener('click', () => {
+          ws.playPause();
+          btn.textContent = ws.isPlaying() ? 'PAUSE' : 'PLAY EVIDENCE';
+        });
+
+        ws.on('finish', () => {
+          btn.textContent = 'PLAY EVIDENCE';
+        });
+
+        ws.on('error', (e) => {
+          console.error('WaveSurfer Error:', e, url);
+          btn.textContent = 'AUDIO MISSING';
+          btn.style.color = 'grey';
+          btn.style.borderColor = '#333';
+        });
+      } catch (err) {
+        console.error('Init Error:', err);
+      }
+    });
+  </script>
+</Layout>
+
+<style>
+  .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+  
+  header { margin-bottom: 60px; border-left: 4px solid var(--accent-red); padding-left: 30px; }
+  header h1 { font-size: 3.5rem; margin: 0; line-height: 1; }
+  .tagline { color: var(--accent-red); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; margin-top: 10px; letter-spacing: 4px; }
+
+  .lead {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    max-width: 800px;
+    margin-bottom: 80px;
+  }
+
+  .limitations-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 100px;
+  }
+
+  .limitation-card {
+    background: rgba(255, 184, 0, 0.05);
+    border: 1px solid rgba(255, 184, 0, 0.2);
+    padding: 30px;
+    border-radius: 4px;
+  }
+
+  .limitation-card h3 {
+    color: var(--accent-yellow);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 0;
+    font-size: 1rem;
+  }
+
+  .limitation-card p {
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .ruled-out-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+  }
+
+  .ruled-out-header h2 {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0 0 10px 0;
+  }
+
+  .ruled-out-header p {
+    color: var(--text-dim);
+    max-width: 700px;
+  }
+
+  /* Re-use or adapt EvidenceCard styles if needed, but EvidenceCard is self-contained */
+</style>

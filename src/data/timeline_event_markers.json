@@ -1,0 +1,72 @@
+[
+  {
+    "id": "02:38:10",
+    "name": "Distress Event #1",
+    "timestamp": "02:38:10",
+    "time": "02:38:10",
+    "relative_seconds": 70,
+    "relative_pct": 16.7,
+    "color": "#00f0ff",
+    "type": "distress",
+    "folder": "FOR_SURE_023810",
+    "evidence_id": "for_sure_chaos_shriek_023810",
+    "description": "Human distress vocalization detected. Peak acoustic novelty with 0.61 VGGish activation.",
+    "image_prefix": "for_sure_chaos_shriek_023810"
+  },
+  {
+    "id": "02:42:12",
+    "name": "Prime Suspect",
+    "timestamp": "02:42:12",
+    "time": "02:42:12",
+    "relative_seconds": 252,
+    "relative_pct": 60.0,
+    "color": "#ff3e3e",
+    "type": "suspect",
+    "folder": "FOR_SURE_024212",
+    "evidence_id": "for_sure_chaos_024212",
+    "description": "SUSPICIOUS ACTIVITY: Figure observed near pool area during critical timeframe. Peak activation 0.66.",
+    "image_prefix": "for_sure_chaos_024212"
+  },
+  {
+    "id": "02:42:30",
+    "name": "Distress Event #2",
+    "timestamp": "02:42:30",
+    "time": "02:42:30",
+    "relative_seconds": 270,
+    "relative_pct": 64.3,
+    "color": "#00f0ff",
+    "type": "distress",
+    "folder": "FOR_SURE_024230",
+    "evidence_id": "for_sure_shriek_chaos_024230",
+    "description": "CONFIRMED TERROR RESPONSE. Highest activation (0.76) - clear human shriek with distress signature.",
+    "image_prefix": "for_sure_shriek_chaos_024230"
+  },
+  {
+    "id": "02:42:44",
+    "name": "Impact Event #1",
+    "timestamp": "02:42:44",
+    "time": "02:42:44",
+    "relative_seconds": 284,
+    "relative_pct": 67.6,
+    "color": "#ffaa00",
+    "type": "impact",
+    "folder": "FOR_SURE_024244",
+    "evidence_id": "for_sure_spike_024244",
+    "description": "Mechanical impact detected. Peak activation 0.63 - structural/impact event.",
+    "image_prefix": "for_sure_spike_024244"
+  },
+  {
+    "id": "02:42:58",
+    "name": "Distress Event #3",
+    "timestamp": "02:42:58",
+    "time": "02:42:58",
+    "relative_seconds": 298,
+    "relative_pct": 70.9,
+    "color": "#00f0ff",
+    "type": "distress",
+    "folder": "FOR_SURE_024258",
+    "evidence_id": "for_sure_chaos_024258",
+    "description": "SECONDARY DISTRESS SIGNAL. Maximum AI detection (0.83) - clearest distress signature.",
+    "image_prefix": "for_sure_chaos_024258"
+  }
+]

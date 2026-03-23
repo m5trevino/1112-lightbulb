@@ -1,0 +1,124 @@
+---
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style is:global>
+      :root {
+        --bg: #050505;
+        --card-bg: rgba(20, 20, 20, 0.8);
+        --accent-red: #ff3e3e;
+        --accent-cyan: #00f0ff;
+        --accent-purple: #9b59b6;
+        --text-main: #e0e0e0;
+        --text-dim: #808080;
+        --border: #2a2a2a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text-main);
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+        background-image: 
+          linear-gradient(rgba(255, 62, 62, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 62, 62, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      .glitch {
+        position: relative;
+        display: inline-block;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -2px;
+      }
+
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+      }
+
+      .glitch::before {
+        left: 2px;
+        text-shadow: -2px 0 var(--accent-cyan);
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim 5s infinite linear alternate-reverse;
+      }
+
+      .glitch::after {
+        left: -2px;
+        text-shadow: -2px 0 var(--accent-red);
+        clip: rect(12px, 450px, 34px, 0);
+        animation: glitch-anim 5s infinite linear alternate-reverse;
+      }
+
+      @keyframes glitch-anim {
+        0% { clip: rect(12px, 9999px, 45px, 0); }
+        20% { clip: rect(67px, 9999px, 89px, 0); }
+        40% { clip: rect(34px, 9999px, 56px, 0); }
+        60% { clip: rect(12px, 9999px, 23px, 0); }
+        80% { clip: rect(56px, 9999px, 78px, 0); }
+        100% { clip: rect(23px, 9999px, 45px, 0); }
+      }
+
+      .risk-badge {
+        background: rgba(255, 62, 62, 0.1);
+        color: var(--accent-red);
+        padding: 5px 15px;
+        border-radius: 2px;
+        font-weight: bold;
+        border: 1px solid rgba(255, 62, 62, 0.2);
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+    </style>
+</head>
+<body>
+    <nav style="background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--border); padding: 20px 40px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);">
+      <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <a href="/" style="color: var(--accent-red); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-weight: bold; font-size: 1.2rem;">1112 KING RD</a>
+        <div style="display: flex; gap: 30px;">
+          <a href="/" style="color: var(--text-dim); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">HOME</a>
+          <a href="/methodology" style="color: var(--text-dim); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">METHODOLOGY</a>
+          <a href="/evidence" style="color: var(--text-dim); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">EVIDENCE</a>
+          <a href="/triangulation" style="color: var(--text-dim); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">TRIANGULATION</a>
+          <a href="/limitations" style="color: var(--text-dim); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">LIMITATIONS</a>
+          <a href="/research" style="color: var(--text-dim); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">RESEARCH</a>
+          <a href="/scripts" style="color: var(--text-dim); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">DOWNLOADS</a>
+          <a href="/contact" style="color: var(--accent-cyan); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">CONTACT</a>
+        </div>
+      </div>
+    </nav>
+    <slot />
+    
+    <!-- GoatCounter Analytics - Privacy-friendly, no cookies -->
+    <script data-goatcounter="https://1112-king-rd.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
