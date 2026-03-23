@@ -196,6 +196,27 @@ const formattedDate = dateObj.toLocaleDateString('en-US', {
     </details>
   )}
 
+  {/* Human Transcript Section */}
+  {finding.human_transcript && (
+    <div class="human-transcript-box">
+      <div class="transcript-header">
+        <span class="transcript-icon">◈</span>
+        HUMAN TRANSCRIPTION (GROUND TRUTH)
+        <span class="transcript-badge">VERIFIED BY ANALYST</span>
+      </div>
+      <div class="transcript-content">
+        <div class="transcript-grid">
+          {finding.human_transcript.map(line => (
+            <div class="transcript-line">
+              <span class="time">{line.time}</span>
+              <span class="note">{line.note}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+
   <div class="metadata-grid">
     <div class="meta-section">
       <h3>ACOUSTIC FEATURES</h3>
