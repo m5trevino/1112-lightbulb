@@ -5,11 +5,7 @@
     "is_forsure": true,
     "folder": "FOR_SURE_023810",
     "source_file": "clip_023810.wav",
-<<<<<<< HEAD
-    "offset_seconds": 16.32,
-=======
     "offset_seconds": 55.0,
->>>>>>> e97e45f6 (chore: Restore repository and sync forensic findings and audio fixes)
     "absolute_timestamp": "2022-11-13T02:38:10.320000",
     "risk": "RED",
     "reason": "CHAOS/SHRIEK",
@@ -67,11 +63,7 @@
     "is_forsure": true,
     "folder": "FOR_SURE_024212",
     "source_file": "clip_024212.wav",
-<<<<<<< HEAD
-    "offset_seconds": 13.44,
-=======
     "offset_seconds": 12.0,
->>>>>>> e97e45f6 (chore: Restore repository and sync forensic findings and audio fixes)
     "absolute_timestamp": "2022-11-13T02:42:12.440000",
     "risk": "RED",
     "reason": "CHAOS",
@@ -97,11 +89,7 @@
     "is_forsure": true,
     "folder": "FOR_SURE_024230",
     "source_file": "clip_024225.wav",
-<<<<<<< HEAD
-    "offset_seconds": 15.36,
-=======
     "offset_seconds": 12.0,
->>>>>>> e97e45f6 (chore: Restore repository and sync forensic findings and audio fixes)
     "absolute_timestamp": "2022-11-13T02:42:30.360000",
     "risk": "RED",
     "reason": "SHRIEK/CHAOS",
@@ -127,11 +115,7 @@
     "is_forsure": true,
     "folder": "FOR_SURE_024244",
     "source_file": "clip_024245.wav",
-<<<<<<< HEAD
-    "offset_seconds": 5.76,
-=======
     "offset_seconds": 2.0,
->>>>>>> e97e45f6 (chore: Restore repository and sync forensic findings and audio fixes)
     "absolute_timestamp": "2022-11-13T02:42:44.760000",
     "risk": "RED",
     "reason": "SPIKE",
@@ -157,11 +141,7 @@
     "is_forsure": true,
     "folder": "FOR_SURE_024258",
     "source_file": "clip_024258.wav",
-<<<<<<< HEAD
-    "offset_seconds": 17.28,
-=======
     "offset_seconds": 5.0,
->>>>>>> e97e45f6 (chore: Restore repository and sync forensic findings and audio fixes)
     "absolute_timestamp": "2022-11-13T02:42:58.280000",
     "risk": "RED",
     "reason": "CHAOS",
