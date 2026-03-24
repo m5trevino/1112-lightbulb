@@ -55,7 +55,49 @@
         "event_matches": "laion_clap/event_matches.png",
         "similarity_heatmap": "laion_clap/similarity_heatmap.png"
       }
-    }
+    },
+    "human_transcript": [
+      {
+        "time": "0-30s",
+        "note": "People talking normally / Faint voices"
+      },
+      {
+        "time": "48s",
+        "note": "Angry sounding voices detected"
+      },
+      {
+        "time": "60-63s",
+        "note": "SHREIK: Female vocal spikes"
+      },
+      {
+        "time": "65-67s",
+        "note": "SHREIK: Multiple female vocal spikes"
+      },
+      {
+        "time": "84s",
+        "note": "Faint arguing voices (increased pace)"
+      },
+      {
+        "time": "90s",
+        "note": "DISTRESS: Faint male voice in pain"
+      },
+      {
+        "time": "92-94s",
+        "note": "LOUD YELP (Biological)"
+      },
+      {
+        "time": "96-98s",
+        "note": "WHIMPER: Faint yelling and whimpering"
+      },
+      {
+        "time": "109s",
+        "note": "UNIDENTIFIED LOUD IMPACT (Non-slam/Non-bang)"
+      },
+      {
+        "time": "110-120s",
+        "note": "Faint talking/yelling in background"
+      }
+    ]
   },
   {
     "evidence_id": "for_sure_chaos_024212",
@@ -81,7 +123,97 @@
       "verdict": "VERDICT: 100% Terror Event.",
       "why": "WHY: A massive physical thud occurs at 12.0s, followed exactly 1.44 seconds later by an unprecedented 28.15% Roughness peak (vocal shredding).",
       "proof": "PROOF: The AI Novelty detection maxed out at 0.83 exactly on this spike. This sequence mathematically confirms a violent impact immediately resulting in severe human distress. The visual mess on the spectrogram is unmistakable."
-    }
+    },
+    "human_transcript": [
+      {
+        "time": "2s",
+        "note": "Guy talking"
+      },
+      {
+        "time": "3s",
+        "note": "Girl yelling"
+      },
+      {
+        "time": "5-6s",
+        "note": "Male vocal spikes"
+      },
+      {
+        "time": "8s",
+        "note": "LOUD BANG"
+      },
+      {
+        "time": "13s",
+        "note": "BANG"
+      },
+      {
+        "time": "14s",
+        "note": "Guy yelling NO"
+      },
+      {
+        "time": "16s",
+        "note": "BANG"
+      },
+      {
+        "time": "20s",
+        "note": "Male says NO"
+      },
+      {
+        "time": "33-34s",
+        "note": "Girl yelling loudly (distant)"
+      },
+      {
+        "time": "40-47s",
+        "note": "Man crying and pleading faintly"
+      },
+      {
+        "time": "48s",
+        "note": "Man yells in agony"
+      },
+      {
+        "time": "54s",
+        "note": "Man says 'Fuck you'"
+      },
+      {
+        "time": "58-59s",
+        "note": "Woman talking loud"
+      },
+      {
+        "time": "60-61s",
+        "note": "LOUD SUDDEN BANG"
+      },
+      {
+        "time": "62s",
+        "note": "Man says 'Fuck him up'"
+      },
+      {
+        "time": "74s",
+        "note": "Man says 'Fuck him up' / Woman screams"
+      },
+      {
+        "time": "76s",
+        "note": "Two men talking/yelling loud"
+      },
+      {
+        "time": "77s",
+        "note": "Man laughing / Woman yelling 'Wooo wooo'"
+      },
+      {
+        "time": "79-95s",
+        "note": "CHANTED: 'Move for Xana' / Rowdy cheering sounds"
+      },
+      {
+        "time": "96-98s",
+        "note": "COMMAND: Man yells 'Stop, stop, stop'"
+      },
+      {
+        "time": "106-107s",
+        "note": "Woman yells LOUD"
+      },
+      {
+        "time": "108-120s",
+        "note": "Multiple men talking (Deep vs High vocals)"
+      }
+    ]
   },
   {
     "evidence_id": "for_sure_shriek_chaos_024230",
@@ -107,7 +239,77 @@
       "verdict": "VERDICT: 100% Terror Scream.",
       "why": "WHY: Sustained high-pitch vocalizations reaching near 2000Hz (Image 4) following a massive Crest Factor physical impact. The vocal cords are pushed beyond conversational limits.",
       "proof": "PROOF: A chaotic impact registers first, followed by a male/female screeched response driving a 24.7% initial Roughness that drops into sustained high-pitch shrieks. The AI confirms this as an acoustic anomaly consistent with profound fear."
-    }
+    },
+    "human_transcript": [
+      {
+        "time": "2-3s",
+        "note": "Loud male voice (No spike)"
+      },
+      {
+        "time": "6-8s",
+        "note": "CONFLICT: Loud fast talking, faint female yelling/pleading"
+      },
+      {
+        "time": "15-17s",
+        "note": "SCREAM: Faint muffled female screaming"
+      },
+      {
+        "time": "22-30s",
+        "note": "Males talking (Increasing volume)"
+      },
+      {
+        "time": "31-32s",
+        "note": "PLEADING: Pain yelling detected"
+      },
+      {
+        "time": "43s",
+        "note": "LOUD IMPACT: Triple bang structure"
+      },
+      {
+        "time": "45-47s",
+        "note": "Loud muffled sound, background voices"
+      },
+      {
+        "time": "56s",
+        "note": "LOUD VOCAL SPIKE"
+      },
+      {
+        "time": "56-78s",
+        "note": "PEAK CHAOS: Non-stop loud yelling/screaming (Multiple people)"
+      },
+      {
+        "time": "78-79s",
+        "note": "COMMAND: Male yelling 'Stop, stop, stop'"
+      },
+      {
+        "time": "80-82s",
+        "note": "DISTRESS: Faint woman cry/yell overpowered by male voices"
+      },
+      {
+        "time": "84-87s",
+        "note": "Loud male yelling spike"
+      },
+      {
+        "time": "88-89s",
+        "note": "Female vocal spike"
+      },
+      {
+        "time": "95-103s",
+        "note": "Loud intense arguing"
+      },
+      {
+        "time": "104s",
+        "note": "Vocal spike (Likely male)"
+      },
+      {
+        "time": "105-113s",
+        "note": "Male voices, female screaming background"
+      },
+      {
+        "time": "114-120s",
+        "note": "Male voices talking/yelling"
+      }
+    ]
   },
   {
     "evidence_id": "for_sure_spike_024244",

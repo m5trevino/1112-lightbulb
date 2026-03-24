@@ -50,4 +50,7 @@
   }
 
   document.addEventListener('astro:page-load', getVisitorCount);
+  document.addEventListener('DOMContentLoaded', getVisitorCount);
+  // Run once immediately in case scripts are loaded late
+  getVisitorCount();
 </script>
